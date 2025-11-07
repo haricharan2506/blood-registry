@@ -1,0 +1,16 @@
+-- sql/upgrade_add_users.sql
+CREATE TABLE IF NOT EXISTS users (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  name VARCHAR(120) NOT NULL,
+  email VARCHAR(190) UNIQUE NOT NULL,
+  password_hash VARCHAR(255) NOT NULL,
+  phone VARCHAR(40) NOT NULL,
+  city VARCHAR(120) NOT NULL,
+  group_name VARCHAR(5) NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+ALTER TABLE requests ADD COLUMN IF NOT EXISTS user_id INT NULL;
+CREATE INDEX IF NOT EXISTS idx_requests_user_id ON requests(user_id);
+ALTER TABLE requests
+  ADD CONSTRAINT fk_requests_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE SET NULL;
